@@ -1,5 +1,9 @@
 <script setup>
   import { ref } from 'vue'
+  import { Skeleton } from '@heroui/skeleton'
+
+// TODO:
+// next we'll want to move each into a child component
 
   const empList = ref(null)
   const mgrList = ref(null)
@@ -14,20 +18,27 @@
 
   async function fetchEmployees() {
     empList.value = null
+    mgrList.value = null
+    hr.value = null
+    sales.value = null
+    marketing.value = null
+    finance.value = null
+    support.value = null
+    product.value = null
+    software.value = null
+    qa.value = null
+
     const result = await fetch('http://localhost:5036/employees')
     empList.value = await result.json()
+
     mgrList.value = empList.value.items.filter((e) => e.roleName.includes("anager"));
-    hr.value = empList.value.items.filter((e) => e.roleName.includes("HR") || e.roleName ===
-    "Recruiter");
+    hr.value = empList.value.items.filter((e) => e.roleName.includes("HR") || e.roleName === "Recruiter");
     sales.value = empList.value.items.filter((e) => e.roleName.includes("ales"));
     marketing.value = empList.value.items.filter((e) => e.roleName.includes("arketing"));
-    finance.value = empList.value.items.filter((e) => e.roleName.includes("ccount") ||
-    e.roleName.includes("CFO"));
+    finance.value = empList.value.items.filter((e) => e.roleName.includes("ccount") || e.roleName.includes("CFO"));
     support.value = empList.value.items.filter((e) => e.roleName.includes("upport"));
-    product.value = empList.value.items.filter((e) => e.roleName.includes("Owner") ||
-    e.roleName.includes("usiness") || e.roleName.includes("roject"));
-    software.value = empList.value.items.filter((e) => e.roleName.includes("oftware") ||
-    e.roleName.includes("ead") || e.roleName.includes("Development"));
+    product.value = empList.value.items.filter((e) => e.roleName.includes("Owner") || e.roleName.includes("usiness") || e.roleName.includes("roject"));
+    software.value = empList.value.items.filter((e) => e.roleName.includes("oftware") || e.roleName.includes("ead") || e.roleName.includes("Development"));
     qa.value = empList.value.items.filter((e) => e.roleName.includes("QA"));
   }
 
@@ -35,11 +46,12 @@
 </script>
 
 <template>
+  <Skeleton />
   <h1>Company Employees</h1>
   <div class="group">
     <span class="heading">Management</span>
     <div v-for="emp in mgrList" :key="emp.id" >
-      <p v-if="!mgrList">Loading...</p>
+      <p v-if="!mgrList || !emp">Loading...</p>
       <div v-else class="empBlock">
         <div>
           <span class="role">{{ emp.roleName}}</span>
@@ -53,7 +65,7 @@
   <div class="group">
     <span class="heading">H.R.</span>
     <div v-for="emp in hr" :key="emp.id" >
-      <p v-if="!mgrList">Loading...</p>
+      <p v-if="!hr">Loading...</p>
       <div v-else class="empBlock">
         <div>
           <span class="role">{{ emp.roleName}}</span>
@@ -67,7 +79,7 @@
   <div class="group">
     <span class="heading">Sales</span>
     <div v-for="emp in sales" :key="emp.id" >
-      <p v-if="!mgrList">Loading...</p>
+      <p v-if="!sales">Loading...</p>
       <div v-else class="empBlock">
         <div>
           <span class="role">{{ emp.roleName}}</span>
@@ -81,7 +93,7 @@
   <div class="group">
     <span class="heading">Marketing</span>
     <div v-for="emp in marketing" :key="emp.id" >
-      <p v-if="!mgrList">Loading...</p>
+      <p v-if="!marketing">Loading...</p>
       <div v-else class="empBlock">
         <div>
           <span class="role">{{ emp.roleName}}</span>
@@ -95,7 +107,7 @@
   <div class="group">
     <span class="heading">Finance</span>
     <div v-for="emp in finance" :key="emp.id" >
-      <p v-if="!mgrList">Loading...</p>
+      <p v-if="!finance">Loading...</p>
       <div v-else class="empBlock">
         <div>
           <span class="role">{{ emp.roleName}}</span>
@@ -109,7 +121,7 @@
   <div class="group">
     <span class="heading">Support</span>
     <div v-for="emp in support" :key="emp.id" >
-      <p v-if="!mgrList">Loading...</p>
+      <p v-if="!support">Loading...</p>
       <div v-else class="empBlock">
         <div>
           <span class="role">{{ emp.roleName}}</span>
@@ -123,7 +135,7 @@
   <div class="group">
     <span class="heading">Proj. Mgmt.</span>
     <div v-for="emp in product" :key="emp.id" >
-      <p v-if="!mgrList">Loading...</p>
+      <p v-if="!product">Loading...</p>
       <div v-else class="empBlock">
         <div>
           <span class="role">{{ emp.roleName}}</span>
@@ -137,7 +149,7 @@
   <div class="group">
     <span class="heading">Engineering</span>
     <div v-for="emp in software" :key="emp.id" >
-      <p v-if="!mgrList">Loading...</p>
+      <p v-if="!software">Loading...</p>
       <div v-else class="empBlock">
         <div>
           <span class="role">{{ emp.roleName}}</span>
@@ -151,7 +163,7 @@
   <div class="group">
     <span class="heading">Quality</span>
     <div v-for="emp in qa" :key="emp.id" >
-      <p v-if="!mgrList">Loading...</p>
+      <p v-if="!qa || !qa.items">Loading...</p>
       <div v-else class="empBlock">
         <div>
           <span class="role">{{ emp.roleName}}</span>
