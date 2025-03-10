@@ -4,5 +4,8 @@
       "@/*": ["./src/*"]
     }
   },
+  "include": [
+    "src/lib/placeholder.js",
+  ],
   "exclude": ["node_modules", "dist"]
 }

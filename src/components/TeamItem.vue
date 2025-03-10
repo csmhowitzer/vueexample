@@ -1,6 +1,7 @@
 <script setup>
   import { ref } from 'vue'
-  import { Skeleton } from '@heroui/skeleton'
+  import { fetchEmpList } from '../lib/data.js'
+  import TeamGroup from './TeamGroup.vue'
 
 // TODO:
 // next we'll want to move each into a child component
@@ -28,8 +29,7 @@
     software.value = null
     qa.value = null
 
-    const result = await fetch('http://localhost:5036/employees')
-    empList.value = await result.json()
+    empList.value = await fetchEmpList();
 
     mgrList.value = empList.value.items.filter((e) => e.roleName.includes("anager"));
     hr.value = empList.value.items.filter((e) => e.roleName.includes("HR") || e.roleName === "Recruiter");
@@ -46,134 +46,19 @@
 </script>
 
 <template>
-  <Skeleton />
   <h1>Company Employees</h1>
-  <div class="group">
-    <span class="heading">Management</span>
-    <div v-for="emp in mgrList" :key="emp.id" >
-      <p v-if="!mgrList || !emp">Loading...</p>
-      <div v-else class="empBlock">
-        <div>
-          <span class="role">{{ emp.roleName}}</span>
-        </div>
-        <div>
-        <span>{{ emp.fName}} {{ emp.lName }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="group">
-    <span class="heading">H.R.</span>
-    <div v-for="emp in hr" :key="emp.id" >
-      <p v-if="!hr">Loading...</p>
-      <div v-else class="empBlock">
-        <div>
-          <span class="role">{{ emp.roleName}}</span>
-        </div>
-        <div>
-        <span>{{ emp.fName}} {{ emp.lName }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="group">
-    <span class="heading">Sales</span>
-    <div v-for="emp in sales" :key="emp.id" >
-      <p v-if="!sales">Loading...</p>
-      <div v-else class="empBlock">
-        <div>
-          <span class="role">{{ emp.roleName}}</span>
-        </div>
-        <div>
-        <span>{{ emp.fName}} {{ emp.lName }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="group">
-    <span class="heading">Marketing</span>
-    <div v-for="emp in marketing" :key="emp.id" >
-      <p v-if="!marketing">Loading...</p>
-      <div v-else class="empBlock">
-        <div>
-          <span class="role">{{ emp.roleName}}</span>
-        </div>
-        <div>
-        <span>{{ emp.fName}} {{ emp.lName }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="group">
-    <span class="heading">Finance</span>
-    <div v-for="emp in finance" :key="emp.id" >
-      <p v-if="!finance">Loading...</p>
-      <div v-else class="empBlock">
-        <div>
-          <span class="role">{{ emp.roleName}}</span>
-        </div>
-        <div>
-        <span>{{ emp.fName}} {{ emp.lName }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="group">
-    <span class="heading">Support</span>
-    <div v-for="emp in support" :key="emp.id" >
-      <p v-if="!support">Loading...</p>
-      <div v-else class="empBlock">
-        <div>
-          <span class="role">{{ emp.roleName}}</span>
-        </div>
-        <div>
-        <span>{{ emp.fName}} {{ emp.lName }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="group">
-    <span class="heading">Proj. Mgmt.</span>
-    <div v-for="emp in product" :key="emp.id" >
-      <p v-if="!product">Loading...</p>
-      <div v-else class="empBlock">
-        <div>
-          <span class="role">{{ emp.roleName}}</span>
-        </div>
-        <div>
-        <span>{{ emp.fName}} {{ emp.lName }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="group">
-    <span class="heading">Engineering</span>
-    <div v-for="emp in software" :key="emp.id" >
-      <p v-if="!software">Loading...</p>
-      <div v-else class="empBlock">
-        <div>
-          <span class="role">{{ emp.roleName}}</span>
-        </div>
-        <div>
-        <span>{{ emp.fName}} {{ emp.lName }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="group">
-    <span class="heading">Quality</span>
-    <div v-for="emp in qa" :key="emp.id" >
-      <p v-if="!qa || !qa.items">Loading...</p>
-      <div v-else class="empBlock">
-        <div>
-          <span class="role">{{ emp.roleName}}</span>
-        </div>
-        <div>
-        <span>{{ emp.fName}} {{ emp.lName }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- <TeamGroup :empList="mgrList"> -->
+  <!--   <template #header>Managers</template> -->
+  <!-- </TeamGroup> -->
+  <TeamGroup :empList="mgrList">Management</TeamGroup>
+  <TeamGroup :empList="hr">H.R.</TeamGroup>
+  <TeamGroup :empList="sales">Sales</TeamGroup>
+  <TeamGroup :empList="marketing">Marketing</TeamGroup>
+  <TeamGroup :empList="finance">Finance</TeamGroup>
+  <TeamGroup :empList="support">Support</TeamGroup>
+  <TeamGroup :empList="product">Product</TeamGroup>
+  <TeamGroup :empList="software">Engineering</TeamGroup>
+  <TeamGroup :empList="qa">Q.A.</TeamGroup>
 </template>
 
 <style scoped>
@@ -184,6 +69,9 @@
     display: grid;
     grid-template-columns: 1fr 3fr 3fr;
     margin: 12px 0;
+  }
+  .group:hover{
+    background-color: #787878;
   }
   .heading {
     writing-mode: vertical-rl;
